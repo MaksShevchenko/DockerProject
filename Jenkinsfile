@@ -13,15 +13,20 @@ pipeline {
             steps {
                 echo 'Checking environment...'
 
-                bat 'whoami'
-                bat 'echo USERPROFILE=%USERPROFILE%'
-                bat 'where minikube'
-                bat 'minikube profile list'
+                        withEnv([
+                            'MINIKUBE_HOME=C:/Users/Zorro/.minikube',
+                            'KUBECONFIG=C:/Users/Zorro/.kube/config'
+                        ]) {
+                            bat 'whoami'
+                            bat 'echo %MINIKUBE_HOME%'
+                            bat 'echo %KUBECONFIG%'
 
-                bat 'java -version'
-                bat 'docker --version'
-                bat 'kubectl version --client'
-                bat 'minikube status'
+                            bat 'java -version'
+                            bat 'docker --version'
+                            bat 'kubectl version --client'
+
+                            bat 'minikube status'
+                            bat 'kubectl get nodes'
             }
         }
 
