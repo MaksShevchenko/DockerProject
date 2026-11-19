@@ -5,6 +5,9 @@ pipeline {
     environment {
         IMAGE_NAME = 'spring-app:1.0'
         K8S_DEPLOYMENT = 'spring-app'
+
+        MINIKUBE_HOME = 'C:/Users/Zorro/.minikube'
+        KUBECONFIG = 'C:/Users/Zorro/.kube/config'
     }
 
     stages {
@@ -13,20 +16,15 @@ pipeline {
             steps {
                 echo 'Checking environment...'
 
-                        withEnv([
-                            'MINIKUBE_HOME=C:/Users/Zorro/.minikube',
-                            'KUBECONFIG=C:/Users/Zorro/.kube/config'
-                        ]) {
-                            bat 'whoami'
-                            bat 'echo %MINIKUBE_HOME%'
-                            bat 'echo %KUBECONFIG%'
+                bat 'whoami'
+                bat 'echo %USERPROFILE%'
 
-                            bat 'java -version'
-                            bat 'docker --version'
-                            bat 'kubectl version --client'
+                bat 'java -version'
+                bat 'docker --version'
+                bat 'kubectl version --client'
 
-                            bat 'minikube status'
-                            bat 'kubectl get nodes'
+                bat 'minikube status'
+                bat 'kubectl get nodes'
             }
         }
 
@@ -48,7 +46,7 @@ pipeline {
 
         stage('Load Image into Minikube') {
             steps {
-                echo 'Loading Docker image into Minikube...'
+                echo 'Loading image into Minikube...'
 
                 bat 'minikube image load %IMAGE_NAME%'
             }
@@ -64,7 +62,7 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                echo 'Checking deployment status...'
+                echo 'Checking deployment...'
 
                 bat 'kubectl rollout status deployment/%K8S_DEPLOYMENT% --timeout=120s'
 
@@ -80,7 +78,7 @@ pipeline {
         }
 
         failure {
-            echo 'Pipeline failed! Check Jenkins console output.'
+            echo 'Pipeline failed! Check Console Output.'
         }
 
         always {
@@ -88,4 +86,3 @@ pipeline {
         }
     }
 }
-
