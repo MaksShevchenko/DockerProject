@@ -13,6 +13,11 @@ pipeline {
             steps {
                 echo 'Checking environment...'
 
+                bat 'whoami'
+                bat 'echo USERPROFILE=%USERPROFILE%'
+                bat 'where minikube'
+                bat 'minikube profile list'
+
                 bat 'java -version'
                 bat 'docker --version'
                 bat 'kubectl version --client'
